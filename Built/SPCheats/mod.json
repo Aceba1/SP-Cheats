@@ -1,0 +1,9 @@
+﻿{
+  "Id": "aceba1.sessionmods",
+  "DisplayName": "SP Cheats",
+  "Author": "Aceba1",
+  "Version": "0.0.1",
+  "Enable": true,
+  "AssemblyName": "SPCheats.dll",
+  "EntryMethod": "SinglePlayerCheats.Class1.Patch"
+}
