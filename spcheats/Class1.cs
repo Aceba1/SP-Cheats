@@ -1,68 +1,92 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace SinglePlayerCheats
 {
     public class Class1
     {
+        public static bool ModExists(string name)
+        {
+            foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (assembly.FullName.StartsWith(name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static void Patch()
         {
-            new GameObject().AddComponent<tGUI>();
+            new GameObject().AddComponent<tGUI>().BlockInjector = ModExists("BlockInjector");
         }
     }
+
     public class tGUI : MonoBehaviour
     {
-        Rect window = new Rect(0f, 0f, 300, 75);
-        int SelectedBlockType = 0;
-        bool ShowGUI = false;
-        void Update()
+        public bool BlockInjector = false;
+        private Rect window = new Rect(0f, 0f, 300, 200);
+        private int SelectedBlockType = 0;
+        private bool ShowGUI = false;
+
+        private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Period))
             {
                 ShowGUI = !ShowGUI;
             }
         }
-        void OnGUI()
+
+        private void OnGUI()
         {
             if (ShowGUI && !Singleton.Manager<ManNetwork>.inst.IsMultiplayer())
             {
                 window = GUI.Window(25346, window, OnGUIWindow, "Cheat Menu");
             }
         }
-        void OnGUIWindow(int ID)
+
+        private void OnGUIWindow(int ID)
         {
-            if (!ShowGUI)
-            {
-                return;
-            }
             try
             {
-                if (GUI.Button(new Rect(0, 15, 100f, 20f), "Fill Inv"))
+                if (GUILayout.Button("Fill Inv (32 of each block)"))
                 {
                     foreach (object obj in Enum.GetValues(typeof(BlockTypes)))
                     {
                         BlockTypes blockType = (BlockTypes)obj;
                         try
                         {
-                            Singleton.Manager<ManPlayer>.inst.PlayerInventory.AddBlocks(blockType, 256);
+                            Singleton.Manager<ManPlayer>.inst.PlayerInventory.AddBlocks(blockType, 32);
                         }
                         catch
                         {
                         }
                     }
+                    if (BlockInjector)
+                    {
+                        foreach (int i in SPCheats.BlockInjector.CustomBlocks)
+                        {
+                            BlockTypes blockType = (BlockTypes)i;
+                            try
+                            {
+                                Singleton.Manager<ManPlayer>.inst.PlayerInventory.AddBlocks(blockType, 32);
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
                 }
                 try
                 {
-                    SelectedBlockType = int.Parse(GUI.TextField(new Rect(60f, 35f, 40f, 20f), this.SelectedBlockType.ToString()));
-                    GUI.Label(new Rect(100f, 35f, 200f, 20f), Enum.GetName(typeof(BlockTypes), this.SelectedBlockType));
+                    SelectedBlockType = int.Parse(GUILayout.TextField(this.SelectedBlockType.ToString()));
+                    GUILayout.Label(Enum.GetName(typeof(BlockTypes), this.SelectedBlockType));
                 }
                 catch
                 {
                 }
-                if (GUI.Button(new Rect(0f, 35f, 60f, 20f), "Spawn"))
+                if (GUILayout.Button("Spawn Block"))
                 {
                     try
                     {
@@ -72,7 +96,7 @@ namespace SinglePlayerCheats
                     {
                     }
                 }
-                if (GUI.Button(new Rect(0f, 55f, 200f, 20f), "Add .5 (mil) money"))
+                if (GUILayout.Button("Add .5 (mil) money"))
                 {
                     try
                     {
