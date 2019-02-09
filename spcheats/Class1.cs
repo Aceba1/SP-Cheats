@@ -86,11 +86,11 @@ namespace SinglePlayerCheats
                 catch
                 {
                 }
-                if (GUILayout.Button("Spawn Block"))
+                if (GUILayout.Button("Spawn Block (Unavailable ATM)"))
                 {
                     try
                     {
-                        Singleton.Manager<ManSpawn>.inst.SpawnBlock((BlockTypes)this.SelectedBlockType, Singleton.playerTank.transform.position + new Vector3(10f, 20f, 10f), Quaternion.Euler(0f, 0f, 0f));
+                        //Singleton.Manager<ManSpawn>.inst.SpawnBlock((BlockTypes)this.SelectedBlockType, Singleton.playerTank.transform.position + new Vector3(10f, 20f, 10f), Quaternion.Euler(0f, 0f, 0f));
                     }
                     catch
                     {
