@@ -86,21 +86,21 @@ namespace SinglePlayerCheats
                 catch
                 {
                 }
-                if (GUILayout.Button("Spawn Block (Unavailable ATM)"))
+                if (GUILayout.Button("Spawn Block"))
                 {
                     try
                     {
-                        //Singleton.Manager<ManSpawn>.inst.SpawnBlock((BlockTypes)this.SelectedBlockType, Singleton.playerTank.transform.position + new Vector3(10f, 20f, 10f), Quaternion.Euler(0f, 0f, 0f));
+                        Singleton.Manager<ManSpawn>.inst.SpawnBlock((BlockTypes)this.SelectedBlockType, Singleton.playerTank.transform.position + new Vector3(10f, 20f, 10f), Quaternion.Euler(0f, 0f, 0f));
                     }
                     catch
                     {
                     }
                 }
-                if (GUILayout.Button("Add .5 (mil) money"))
+                if (GUILayout.Button("Add 1 (mil) money"))
                 {
                     try
                     {
-                        Singleton.Manager<ManPlayer>.inst.AddMoney(500000);
+                        Singleton.Manager<ManPlayer>.inst.AddMoney(1000000);
                     }
                     catch
                     {
