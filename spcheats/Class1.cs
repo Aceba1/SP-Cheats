@@ -27,14 +27,31 @@ namespace SinglePlayerCheats
         }
         
     }
-        [HarmonyPatch(typeof(Damageable), "DealActualDamage")]
-        static class HarmonyPatchHacks //HeX#3692 was here coding some shenanigans
+    [HarmonyPatch(typeof(Damageable), "DealActualDamage")]
+    static class HarmonyPatchHacks //HeX#3692 was here coding some shenanigans
+    {
+        public static bool Banana;
+        static bool Prefix(Damageable __instance)
         {
-            static bool Prefix()
+            if (Singleton.Manager<ManPlayer>.inst.PlayerIndestructible)
             {
-            return !Singleton.Manager<ManPlayer>.inst.PlayerIndestructible;
+                try
+                {
+                    if (Banana)
+                    {
+                        return !__instance.Block.tank.IsFriendly();
+                    }
+                }
+                catch
+                {
+                    return true;
+                }
+                return false;
             }
+            return true;
+            // return !Singleton.Manager<ManPlayer>.inst.PlayerIndestructible;
         }
+    }
     public class tGUI : MonoBehaviour
     {
         public bool BlockInjector = false;
@@ -120,7 +137,13 @@ namespace SinglePlayerCheats
                 }
                 try
                 {
-                    Singleton.Manager<ManPlayer>.inst.PlayerIndestructible = GUILayout.Toggle(Singleton.Manager<ManPlayer>.inst.PlayerIndestructible, "Invincibility");
+                    
+                    Singleton.Manager<ManPlayer>.inst.PlayerIndestructible = GUILayout.Toggle(Singleton.Manager<ManPlayer>.inst.PlayerIndestructible, "Invincibility for ALL");
+                    if (Singleton.Manager<ManPlayer>.inst.PlayerIndestructible)
+                    {
+                        HarmonyPatchHacks.Banana = GUILayout.Toggle(HarmonyPatchHacks.Banana, "Only for Allies");
+                        GUILayout.Label("TURN OFF INVINCIBILITIES BEFORE SWITCHING GAMEMODES");
+                    }
                 }
                 catch
                 {
