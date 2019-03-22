@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using Harmony;
+using System.Reflection;
 
 namespace SinglePlayerCheats
 {
@@ -20,13 +22,23 @@ namespace SinglePlayerCheats
         public static void Patch()
         {
             new GameObject().AddComponent<tGUI>().BlockInjector = ModExists("BlockInjector");
+            var harmony = HarmonyInstance.Create("aceba1.sessionmods");
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
+        
     }
-
+        [HarmonyPatch(typeof(Damageable), "DealActualDamage")]
+        static class HarmonyPatchHacks //HeX#3692 was here coding some shenanigans
+        {
+            static bool Prefix()
+            {
+            return !Singleton.Manager<ManPlayer>.inst.PlayerIndestructible;
+            }
+        }
     public class tGUI : MonoBehaviour
     {
         public bool BlockInjector = false;
-        private Rect window = new Rect(0f, 0f, 300, 200);
+        private Rect window = new Rect(0f, 0f, 300, 250);
         private int SelectedBlockType = 0;
         private bool ShowGUI = false;
 
@@ -105,6 +117,13 @@ namespace SinglePlayerCheats
                     catch
                     {
                     }
+                }
+                try
+                {
+                    Singleton.Manager<ManPlayer>.inst.PlayerIndestructible = GUILayout.Toggle(Singleton.Manager<ManPlayer>.inst.PlayerIndestructible, "Invincibility");
+                }
+                catch
+                {
                 }
             }
             catch
