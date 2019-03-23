@@ -21,7 +21,11 @@ namespace SinglePlayerCheats
 
         public static void Patch()
         {
-            new GameObject().AddComponent<tGUI>().BlockInjector = ModExists("BlockInjector");
+            new GameObject().AddComponent<tGUI>();
+            tGUI.BlockInjector = ModExists("BlockInjector");
+            tGUI.GUIDisp = new GameObject();
+            tGUI.GUIDisp.AddComponent<tGUI.GUIDisplay>();
+            tGUI.GUIDisp.SetActive(false);
             var harmony = HarmonyInstance.Create("aceba1.sessionmods");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
@@ -54,28 +58,22 @@ namespace SinglePlayerCheats
     }
     public class tGUI : MonoBehaviour
     {
-        public bool BlockInjector = false;
-        private Rect window = new Rect(0f, 0f, 300, 250);
-        private int SelectedBlockType = 0;
-        private bool ShowGUI = false;
+        static public bool BlockInjector = false;
+        static private Rect window = new Rect(0f, 0f, 300, 250);
+        static private int SelectedBlockType = 0;
+        static private bool ShowGUI = false;
+        static public GameObject GUIDisp;
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Period))
             {
                 ShowGUI = !ShowGUI;
+                GUIDisp.SetActive(ShowGUI);
             }
         }
 
-        private void OnGUI()
-        {
-            if (ShowGUI && !Singleton.Manager<ManNetwork>.inst.IsMultiplayer())
-            {
-                window = GUI.Window(25346, window, OnGUIWindow, "Cheat Menu");
-            }
-        }
-
-        private void OnGUIWindow(int ID)
+        static private void OnGUIWindow(int ID)
         {
             try
             {
@@ -109,8 +107,8 @@ namespace SinglePlayerCheats
                 }
                 try
                 {
-                    SelectedBlockType = int.Parse(GUILayout.TextField(this.SelectedBlockType.ToString()));
-                    GUILayout.Label(Enum.GetName(typeof(BlockTypes), this.SelectedBlockType));
+                    SelectedBlockType = int.Parse(GUILayout.TextField(SelectedBlockType.ToString()));
+                    GUILayout.Label(Enum.GetName(typeof(BlockTypes), SelectedBlockType));
                 }
                 catch
                 {
@@ -119,7 +117,7 @@ namespace SinglePlayerCheats
                 {
                     try
                     {
-                        Singleton.Manager<ManSpawn>.inst.SpawnBlock((BlockTypes)this.SelectedBlockType, Singleton.playerTank.transform.position + new Vector3(10f, 20f, 10f), Quaternion.Euler(0f, 0f, 0f));
+                        Singleton.Manager<ManSpawn>.inst.SpawnBlock((BlockTypes)SelectedBlockType, Singleton.playerTank.transform.position + new Vector3(10f, 20f, 10f), Quaternion.Euler(0f, 0f, 0f));
                     }
                     catch
                     {
@@ -153,6 +151,13 @@ namespace SinglePlayerCheats
             {
             }
             GUI.DragWindow();
+        }
+        internal class GUIDisplay : MonoBehaviour
+        {
+            public void OnGUI()
+            {
+                tGUI.window = GUI.Window(25346, window, OnGUIWindow, "Cheat Menu");
+            }
         }
     }
 }
