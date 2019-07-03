@@ -84,7 +84,7 @@ namespace SinglePlayerCheats
                         BlockTypes blockType = (BlockTypes)obj;
                         try
                         {
-                            Singleton.Manager<ManPlayer>.inst.PlayerInventory.AddBlocks(blockType, 32);
+                            Singleton.Manager<ManPlayer>.inst.PlayerInventory.HostAddItem(blockType, 32);
                         }
                         catch
                         {
@@ -97,7 +97,7 @@ namespace SinglePlayerCheats
                             BlockTypes blockType = (BlockTypes)i;
                             try
                             {
-                                Singleton.Manager<ManPlayer>.inst.PlayerInventory.AddBlocks(blockType, 32);
+                                Singleton.Manager<ManPlayer>.inst.PlayerInventory.HostAddItem(blockType, 32);
                             }
                             catch
                             {
