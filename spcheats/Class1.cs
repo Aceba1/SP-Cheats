@@ -77,7 +77,63 @@ namespace SinglePlayerCheats
         {
             try
             {
-                if (GUILayout.Button("Fill Inv (32 of each block)"))
+                try
+                {
+                    SelectedBlockType = int.Parse(GUILayout.TextField(SelectedBlockType.ToString()));
+                    GUILayout.Label(Enum.GetName(typeof(BlockTypes), SelectedBlockType));
+                }
+                catch
+                {
+                }
+               if (GUILayout.Button("Discover Selected Block"))
+                {
+                    try
+                    {
+                        Singleton.Manager<ManLicenses>.inst.DiscoverBlock((BlockTypes)SelectedBlockType);
+                    }
+                    catch
+                    {
+                    }
+                }
+                if (GUILayout.Button("Spawn Selected Block"))
+                {
+                    try
+                    {
+                        Singleton.Manager<ManSpawn>.inst.SpawnBlock((BlockTypes)SelectedBlockType, Singleton.playerTank.transform.position + new Vector3(10f, 20f, 10f), Quaternion.Euler(0f, 0f, 0f));
+                    }
+                    catch
+                    {
+                    }
+                }
+                if (GUILayout.Button("Discover All Blocks"))
+                {
+                    foreach (object obj in Enum.GetValues(typeof(BlockTypes)))
+                    {
+                        BlockTypes blockType = (BlockTypes)obj;
+                        try
+                        {
+                            Singleton.Manager<ManLicenses>.inst.DiscoverBlock(blockType);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    if (BlockInjector)
+                    {
+                        foreach (int i in SPCheats.BlockInjector.CustomBlocks)
+                        {
+                            BlockTypes blockType = (BlockTypes)i;
+                            try
+                            {
+                                Singleton.Manager<ManLicenses>.inst.DiscoverBlock(blockType);
+                            }
+                            catch
+                            {
+                            }
+                        }
+                    }
+                }
+                if (GUILayout.Button("Fill Inv w/ 100 Of All"))
                 {
                     foreach (object obj in Enum.GetValues(typeof(BlockTypes)))
                     {
@@ -105,25 +161,7 @@ namespace SinglePlayerCheats
                         }
                     }
                 }
-                try
-                {
-                    SelectedBlockType = int.Parse(GUILayout.TextField(SelectedBlockType.ToString()));
-                    GUILayout.Label(Enum.GetName(typeof(BlockTypes), SelectedBlockType));
-                }
-                catch
-                {
-                }
-                if (GUILayout.Button("Spawn Block"))
-                {
-                    try
-                    {
-                        Singleton.Manager<ManSpawn>.inst.SpawnBlock((BlockTypes)SelectedBlockType, Singleton.playerTank.transform.position + new Vector3(10f, 20f, 10f), Quaternion.Euler(0f, 0f, 0f));
-                    }
-                    catch
-                    {
-                    }
-                }
-                if (GUILayout.Button("Add 1 (mil) money"))
+                if (GUILayout.Button("Add 1m Block Bucks"))
                 {
                     try
                     {
