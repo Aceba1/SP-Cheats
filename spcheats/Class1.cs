@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using Harmony;
+using HarmonyLib;
 using System.Reflection;
 
 namespace SinglePlayerCheats
@@ -26,7 +26,7 @@ namespace SinglePlayerCheats
             tGUI.GUIDisp = new GameObject();
             tGUI.GUIDisp.AddComponent<tGUI.GUIDisplay>();
             tGUI.GUIDisp.SetActive(false);
-            var harmony = HarmonyInstance.Create("aceba1.sessionmods");
+            var harmony = new Harmony("aceba1.sessionmods");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
         
